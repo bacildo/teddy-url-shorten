@@ -1,0 +1,29 @@
+services:
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3307:3306"  # Mapeando a porta 3307 do host para a 3306 do container
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d  # Diretório para scripts de inicialização
+    env_file:
+      - ./url-shortener/.env  
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]  # Usando 127.0.0.1 para o healthcheck
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: ./url-shortener  # O contexto é a raiz do projeto
+      dockerfile: Dockerfile  # Nome do Dockerfile
+    ports:
+      - "3000:3000"  # Mapeando a porta 3000 do host para a 3000 do container
+    depends_on:
+      - mysql  # Espera o serviço MySQL estar ativo
+    env_file:
+      - ./url-shortener/.env
+
+volumes:
+  mysql_data:  # Definindo o volume para persistência de dados

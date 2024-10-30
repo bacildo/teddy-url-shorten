@@ -1,1 +1,1 @@
-# teddy-url-shorten
+# shorten-utl
