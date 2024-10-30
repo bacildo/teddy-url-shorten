@@ -1,11 +1,13 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateUrlDto {
-  @IsString()
-  @IsNotEmpty()
-  originalUrl!: string;
+  @ApiProperty({
+    description: 'original url',
+    example:
+      '"https://teddy360.com.br/material/marco-legal-das-garantias-sancionado-entenda-o-que-muda/"',
+  })
+  originalUrl: string;
 
-  @IsString()
-  @IsNotEmpty()
-  shortUrl!: string;
+  @ApiProperty({ description: 'short url', example: 'https://fzE345w' })
+  shortUrl: string;
 }
