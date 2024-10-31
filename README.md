@@ -22,8 +22,11 @@ http://localhost:3000/
 
 ### Autenticação
 
-- **POST** `/auth/register`: Registra um novo usuário.
-- **POST** `/auth/login`: Realiza login de um usuário e retorna um token de acesso.
+- **POST** `/auth/register`: Registra um novo usuário. Passar o seguinte body {
+	"email":"test@example.com",
+	"password":"123456"
+}
+- **POST** `/auth/login`: Realize o login com os body fornecido no registro para retornar um token de acesso.
 
 ### URLs
 
