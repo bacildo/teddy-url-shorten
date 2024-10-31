@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { UrlService } from 'src/urls/urls.service';
 import { Url } from 'src/urls/url.entity';
@@ -12,8 +11,6 @@ jest.mock('uuid', () => ({
 
 describe('UrlService', () => {
   let service: UrlService;
-  let urlRepository: Repository<Url>;
-  let clickRepository: Repository<Click>;
 
   const mockUrlRepository = {
     findOne: jest.fn(),
@@ -42,8 +39,6 @@ describe('UrlService', () => {
     }).compile();
 
     service = module.get<UrlService>(UrlService);
-    urlRepository = module.get<Repository<Url>>(getRepositoryToken(Url));
-    clickRepository = module.get<Repository<Click>>(getRepositoryToken(Click));
   });
 
   afterEach(() => {

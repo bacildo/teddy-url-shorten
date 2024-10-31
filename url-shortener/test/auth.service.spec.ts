@@ -64,10 +64,8 @@ describe('AuthService', () => {
       mockUserRepository.findOne.mockResolvedValueOnce(user);
       jest.spyOn(bcrypt, 'compare').mockResolvedValueOnce(true as never);
 
-      const result = await authService.login(
-        'test@example.com',
-        'testPassword',
-      );
+      const loginDto = { email: 'example@test.com', password: '12345' };
+      const result = await authService.login(loginDto);
 
       expect(result).toEqual({ accessToken: 'testToken' });
       expect(mockJwtService.sign).toHaveBeenCalledWith({
@@ -78,10 +76,10 @@ describe('AuthService', () => {
 
     it('deve lançar um UnauthorizedException para credenciais inválidas', async () => {
       mockUserRepository.findOne.mockResolvedValueOnce(null);
-
-      await expect(
-        authService.login('wrong@example.com', 'wrongPassword'),
-      ).rejects.toThrow(UnauthorizedException);
+      const loginDto = { email: 'example.com', password: '213123' };
+      await expect(authService.login(loginDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 });

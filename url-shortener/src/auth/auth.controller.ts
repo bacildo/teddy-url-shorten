@@ -21,9 +21,7 @@ export class AuthController {
   @ApiBody({ type: RegisterDto, description: 'Data for user registry' })
   @ApiResponse({ status: 201, description: 'User created.' })
   @ApiResponse({ status: 400, description: 'Invalid Data.' })
-  async register(
-    @Body() registerDto: RegisterDto,
-  ): Promise<void> {
+  async register(@Body() registerDto: RegisterDto): Promise<void> {
     return this.authService.register(registerDto.email, registerDto.password);
   }
 

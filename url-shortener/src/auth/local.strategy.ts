@@ -7,14 +7,14 @@ import { LoginDto } from './dto/login.dto';
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
-    super({ usernameField: 'email' }); 
+    super({ usernameField: 'email' });
   }
 
-  async validate(login:LoginDto): Promise<any> {
+  async validate(login: LoginDto): Promise<any> {
     const user = await this.authService.validateUser(login);
     if (!user) {
-      throw new UnauthorizedException(); 
+      throw new UnauthorizedException();
     }
-    return user; 
+    return user;
   }
 }

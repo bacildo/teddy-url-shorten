@@ -21,30 +21,32 @@ describe('AuthController', () => {
     authService = module.get<AuthService>(AuthService);
   });
 
-  it('deve estar definido', () => {
+  it('should be defined', () => {
     expect(authController).toBeDefined();
   });
 
   describe('register', () => {
-    it('deve chamar o AuthService para registrar um novo usuário', async () => {
-      const email = 'test@example.com';
-      const password = 'testPassword';
-      await authController.register(email, password);
-
-      expect(authService.register).toHaveBeenCalledWith(email, password);
+    it('should call AuthService to register a new user', async () => {
+      const registerDto = {
+        email: 'test@example.com',
+        password: 'testPassword',
+      };
+      await authController.register(registerDto);
+      expect(authService.register).toHaveBeenCalledWith(
+        registerDto.email,
+        registerDto.password,
+      );
     });
   });
 
   describe('login', () => {
-    it('deve chamar o AuthService para login e retornar um token JWT', async () => {
-      const email = 'test@example.com';
-      const password = 'testPassword';
+    it('should call AuthService to log in and return a JWT token', async () => {
       const accessToken = { accessToken: 'testToken' };
       mockAuthService.login.mockResolvedValue(accessToken);
+      const loginDto = { email: 'test@example.com', password: 'testPassword' };
+      const result = await authController.login(loginDto);
 
-      const result = await authController.login(email, password);
-
-      expect(authService.login).toHaveBeenCalledWith(email, password);
+      expect(authService.login).toHaveBeenCalledWith(loginDto);
       expect(result).toEqual(accessToken);
     });
   });

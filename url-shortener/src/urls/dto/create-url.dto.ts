@@ -8,6 +8,9 @@ export class CreateUrlDto {
   })
   originalUrl: string;
 
-  @ApiProperty({ description: 'short url', example: 'https://localhost:3000/url/fzE345w' })
+  @ApiProperty({
+    description: 'short url',
+    example: 'https://localhost:3000/url/fzE345w',
+  })
   shortUrl: string;
 }

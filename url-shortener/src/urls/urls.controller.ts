@@ -58,7 +58,6 @@ export class UrlController {
   async redirectToOriginal(
     @Param('shortUrl') shortUrl: string,
   ): Promise<{ url: string }> {
-    
     const originalUrl = await this.urlService.redirectToOriginal(shortUrl);
     return { url: originalUrl };
   }

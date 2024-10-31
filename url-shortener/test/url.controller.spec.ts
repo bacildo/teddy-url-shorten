@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { CustomRequest } from 'src/interfaces/customRequest';
 import { CreateUrlDto } from 'src/urls/dto/create-url.dto';
 import { UpdateUrlDto } from 'src/urls/dto/update-url.dto';
 import { UrlController } from 'src/urls/urls.controller';
@@ -6,7 +7,7 @@ import { UrlService } from 'src/urls/urls.service';
 
 describe('UrlController', () => {
   let controller: UrlController;
-  let service: UrlService;
+  // let service: UrlService;
 
   const mockUrlService = {
     shortenUrl: jest.fn(),
@@ -28,7 +29,6 @@ describe('UrlController', () => {
     }).compile();
 
     controller = module.get<UrlController>(UrlController);
-    service = module.get<UrlService>(UrlService);
   });
 
   afterEach(() => {
@@ -36,22 +36,76 @@ describe('UrlController', () => {
   });
 
   describe('shortenUrl', () => {
-    it('should shorten a URL', async () => {
+    it('should shorten a URL with ownerId', async () => {
       const originalUrl = 'https://example.com';
       const ownerId = 1;
       const shortUrl = 'abc123';
-
+      const expectedResponse = {
+        shortUrl: `http://localhost:3000/url/${shortUrl}`,
+      };
       mockUrlService.shortenUrl.mockResolvedValue(shortUrl);
+
+      const mockUser = {
+        id: ownerId,
+        email: 'test@example.com',
+        password: 'testPassword',
+        urls: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        sub: ownerId,
+      };
+
+      const mockRequest: CustomRequest = {
+        user: mockUser,
+        headers: {},
+        method: 'POST',
+        originalUrl: '',
+        query: {},
+        params: {},
+        body: {},
+      } as any;
 
       const result = await controller.shortenUrl(
         { originalUrl } as CreateUrlDto,
-        { user: { id: ownerId } },
+        mockRequest,
       );
 
-      expect(result).toEqual({ shortUrl });
+      expect(result).toEqual(expectedResponse);
       expect(mockUrlService.shortenUrl).toHaveBeenCalledWith(
         originalUrl,
         ownerId,
+      );
+    });
+
+    it('should shorten a URL without ownerId', async () => {
+      const originalUrl = 'https://example.com';
+      const shortUrl = 'abc123';
+      const expectedResponse = {
+        shortUrl: `http://localhost:3000/url/${shortUrl}`,
+      };
+      mockUrlService.shortenUrl.mockResolvedValue(shortUrl);
+
+      const mockRequest: CustomRequest = {
+        user: {},
+        headers: {},
+        method: 'POST',
+        originalUrl: '',
+        query: {},
+        params: {},
+        body: {
+          originalUrl,
+        },
+      } as any;
+
+      const result = await controller.shortenUrl(
+        { originalUrl } as CreateUrlDto,
+        mockRequest,
+      );
+
+      expect(result).toEqual(expectedResponse);
+      expect(mockUrlService.shortenUrl).toHaveBeenCalledWith(
+        originalUrl,
+        undefined,
       );
     });
   });
@@ -77,7 +131,26 @@ describe('UrlController', () => {
 
       mockUrlService.getUrlsByUser.mockResolvedValue(urls);
 
-      const result = await controller.getUrlsByUser({ user: { id: userId } });
+      const mockUser = {
+        id: userId,
+        email: 'test@example.com',
+        password: 'testPassword',
+        urls: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const mockRequest: CustomRequest = {
+        user: mockUser,
+        headers: {},
+        method: 'GET',
+        originalUrl: '',
+        query: {},
+        params: {},
+        body: {},
+      } as any;
+
+      const result = await controller.getUrlsByUser(mockRequest);
 
       expect(result).toEqual(urls);
       expect(mockUrlService.getUrlsByUser).toHaveBeenCalledWith(userId);
