@@ -7,14 +7,14 @@ import { LoginDto } from './dto/login.dto';
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
-    super({ usernameField: 'email' }); // Define o campo de email como o campo de username
+    super({ usernameField: 'email' }); 
   }
 
   async validate(login:LoginDto): Promise<any> {
     const user = await this.authService.validateUser(login);
     if (!user) {
-      throw new UnauthorizedException(); // Lança um erro se o usuário não for encontrado
+      throw new UnauthorizedException(); 
     }
-    return user; // Retorna o usuário validado
+    return user; 
   }
 }

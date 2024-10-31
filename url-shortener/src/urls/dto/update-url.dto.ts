@@ -4,10 +4,13 @@ export class UpdateUrlDto {
   @ApiProperty({
     description: 'original url',
     example:
-      '"https://teddy360.com.br/material/marco-legal-das-garantias-sancionado-entenda-o-que-muda/"',
+      'https://teddy360.com.br/material/marco-legal-das-garantias-sancionado-entenda-o-que-muda/',
   })
   originalUrl: string;
 
-  @ApiProperty({ description: 'short url', example: 'https://fzE345w' })
+  @ApiProperty({
+    description: 'short url',
+    example: 'https://localhost:3000/url/fzE345w',
+  })
   shortUrl: string;
 }

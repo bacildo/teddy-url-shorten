@@ -28,7 +28,8 @@ export class UrlService {
       where: { shortUrl, deletedAt: null },
     });
     if (!url) throw new NotFoundException('URL not found or deleted');
-
+    url.clickCount++;
+    await this.urlRepository.save(url);
     await this.clickRepository.save({ url });
     return url.originalUrl;
   }

@@ -14,6 +14,7 @@ import { UrlService } from '../urls/urls.service';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUrlDto } from './dto/create-url.dto';
 import { UpdateUrlDto } from './dto/update-url.dto';
+import { CustomRequest } from 'src/interfaces/customRequest';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -23,7 +24,7 @@ import {
 } from '@nestjs/swagger';
 
 @ApiTags('url')
-@ApiBearerAuth()
+@ApiBearerAuth('bearer')
 @Controller('url')
 export class UrlController {
   constructor(private readonly urlService: UrlService) {}
@@ -35,14 +36,16 @@ export class UrlController {
   @ApiResponse({ status: 400, description: 'Error shortening URL.' })
   async shortenUrl(
     @Body() createUrlDto: CreateUrlDto,
-    @Req() req: any,
+    @Req() req: CustomRequest,
   ): Promise<{ shortUrl: string }> {
-    const ownerId = req.user?.id;
+    const ownerId = req.user?.sub;
     const shortUrl = await this.urlService.shortenUrl(
       createUrlDto.originalUrl,
       ownerId,
     );
-    return { shortUrl };
+    const baseUrl = 'http://localhost:3000/url';
+    const fullShortUrl = `${baseUrl}/${shortUrl}`;
+    return { shortUrl: fullShortUrl };
   }
 
   @Get(':shortUrl')
@@ -55,6 +58,7 @@ export class UrlController {
   async redirectToOriginal(
     @Param('shortUrl') shortUrl: string,
   ): Promise<{ url: string }> {
+    
     const originalUrl = await this.urlService.redirectToOriginal(shortUrl);
     return { url: originalUrl };
   }
@@ -63,14 +67,17 @@ export class UrlController {
   @Get()
   @ApiOperation({ summary: 'Get authenticated users URLs.' })
   @ApiResponse({ status: 200, description: 'Successfully retrieved URLs.' })
-  async getUrlsByUser(@Req() req: any) {
+  async getUrlsByUser(@Req() req: CustomRequest) {
     return await this.urlService.getUrlsByUser(req.user.id);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put(':shortUrl')
   @ApiOperation({ summary: 'Update original URL.' })
-  @ApiBody({ type: UpdateUrlDto, description: 'Original URL updated successfully.' })
+  @ApiBody({
+    type: UpdateUrlDto,
+    description: 'Original URL updated successfully.',
+  })
   @ApiResponse({
     status: 200,
     description: 'Original URL updated successfully.',
