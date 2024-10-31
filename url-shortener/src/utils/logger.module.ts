@@ -1,7 +1,5 @@
-// src/utils/logger.module.ts
-
 import { Module } from '@nestjs/common';
-import { customLogger } from './logger'; 
+import { customLogger } from './logger';
 
 @Module({
   providers: [
@@ -10,6 +8,6 @@ import { customLogger } from './logger';
       useValue: customLogger,
     },
   ],
-  exports: ['Logger'], 
+  exports: ['Logger'],
 })
 export class LoggerModule {}

@@ -21,8 +21,7 @@ import { LoggerModule } from './utils/logger.module';
     }),
     AuthModule,
     UrlsModule,
-    LoggerModule
+    LoggerModule,
   ],
-
 })
 export class AppModule {}

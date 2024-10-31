@@ -7,8 +7,6 @@ import { UrlService } from 'src/urls/urls.service';
 
 describe('UrlController', () => {
   let controller: UrlController;
-  // let service: UrlService;
-
   const mockUrlService = {
     shortenUrl: jest.fn(),
     redirectToOriginal: jest.fn(),

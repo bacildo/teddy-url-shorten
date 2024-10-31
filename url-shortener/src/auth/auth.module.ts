@@ -7,7 +7,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { LoggerModule } from 'src/utils/logger.module';
 
-
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
@@ -15,7 +14,7 @@ import { LoggerModule } from 'src/utils/logger.module';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
-    LoggerModule
+    LoggerModule,
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],

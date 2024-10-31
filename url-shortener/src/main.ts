@@ -32,7 +32,7 @@ async function bootstrap() {
     writeFileSync(outputPath, JSON.stringify(document));
     customLogger.log('Swagger file created');
   } catch (error) {
-    customLogger.error('Error generating swagger file');
+    customLogger.error(error);
   }
 
   await app.listen(3000);
