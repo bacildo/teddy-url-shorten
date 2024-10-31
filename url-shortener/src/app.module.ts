@@ -5,6 +5,7 @@ import { UrlsModule } from './urls/urls.module';
 import { User } from './auth/user.entity';
 import { Url } from './urls/url.entity';
 import { Click } from './urls/click.entity';
+import { LoggerModule } from './utils/logger.module';
 
 @Module({
   imports: [
@@ -20,6 +21,8 @@ import { Click } from './urls/click.entity';
     }),
     AuthModule,
     UrlsModule,
+    LoggerModule
   ],
+
 })
 export class AppModule {}

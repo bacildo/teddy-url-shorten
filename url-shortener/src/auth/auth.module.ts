@@ -5,6 +5,8 @@ import { AuthController } from './auth.controller';
 import { User } from './user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
+import { LoggerModule } from 'src/utils/logger.module';
+
 
 @Module({
   imports: [
@@ -13,6 +15,7 @@ import { JwtStrategy } from './jwt.strategy';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
+    LoggerModule
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
