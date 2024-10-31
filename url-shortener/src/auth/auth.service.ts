@@ -33,11 +33,15 @@ export class AuthService {
     return null;
   }
 
+  async findUserById(id: number): Promise<User | undefined> {
+    return this.usersRepository.findOneBy({ id });
+  }
+
   async login(login: LoginDto): Promise<{ accessToken: string }> {
     const user = await this.validateUser(login);
     if (!user) throw new UnauthorizedException('Invalid credentials');
-
     const payload = { email: user.email, sub: user.id };
-    return { accessToken: this.jwtService.sign(payload) };
+    const accessToken = this.jwtService.sign(payload);
+    return { accessToken };
   }
 }

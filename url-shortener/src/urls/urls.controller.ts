@@ -29,6 +29,7 @@ import {
 export class UrlController {
   constructor(private readonly urlService: UrlService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('shorten')
   @ApiOperation({ summary: 'URL Shorten' })
   @ApiBody({ type: CreateUrlDto, description: 'URL data to be shortened.' })
@@ -38,11 +39,25 @@ export class UrlController {
     @Body() createUrlDto: CreateUrlDto,
     @Req() req: CustomRequest,
   ): Promise<{ shortUrl: string }> {
-    const ownerId = req.user?.sub;
+    const ownerId = req.user?.id;
     const shortUrl = await this.urlService.shortenUrl(
       createUrlDto.originalUrl,
       ownerId,
     );
+    const baseUrl = 'http://localhost:3000/url';
+    const fullShortUrl = `${baseUrl}/${shortUrl}`;
+    return { shortUrl: fullShortUrl };
+  }
+
+  @Post('no-auth/shorten/')
+  @ApiOperation({ summary: 'URL Shorten' })
+  @ApiBody({ type: CreateUrlDto, description: 'URL data to be shortened.' })
+  @ApiResponse({ status: 201, description: 'Successfully shortened URL.' })
+  @ApiResponse({ status: 400, description: 'Error shortening URL.' })
+  async shortenUrlNoAuth(
+    @Body() createUrlDto: CreateUrlDto,
+  ): Promise<{ shortUrl: string }> {
+    const shortUrl = await this.urlService.shortenUrl(createUrlDto.originalUrl);
     const baseUrl = 'http://localhost:3000/url';
     const fullShortUrl = `${baseUrl}/${shortUrl}`;
     return { shortUrl: fullShortUrl };
